@@ -60,7 +60,26 @@ router.get('/login', async (req, res) => {
     return res.status(200).json(user)
   } catch (error) {
     console.error(error)
-    return res.status(300).json(error)
+    return res.status(400).json(error)
+  }
+})
+
+// @route DELETE /api/users/:userId
+// @desc  Delete user by id
+// @acc   Public (will be private)
+router.delete('/:userId', async (req, res) => {
+  const id = req.params.userId
+  try {
+    const user = await User.findByIdAndDelete(id)
+    // if not found
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+    // if found - return with success
+    return res.status(200).json({ deleted: true, user })
+  } catch (error) {
+    console.error(error)
+    return res.status(400).json(error)
   }
 })
 
