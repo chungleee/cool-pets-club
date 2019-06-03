@@ -3,10 +3,10 @@ const bcrypt = require('bcryptjs')
 const User = require('../models/User')
 const { omitPassword } = require('../utils/utilities')
 
-// @route POST /api/users/create
+// @route POST /api/users/register
 // @desc  Create new user
 // @acc   Public
-router.post('/create', async (req, res) => {
+router.post('/register', async (req, res) => {
   const { email, password } = req.body
   try {
     // find if email exists
@@ -34,6 +34,33 @@ router.post('/create', async (req, res) => {
   } catch (error) {
     console.error(error)
     return res.status(400).json(error)
+  }
+})
+
+// @route GET /api/users/login
+// @desc  Fetch user by email
+// @acc   Public
+router.get('/login', async (req, res) => {
+  const { email, password } = req.body
+  try {
+    // find user by email
+    const user = await User.findOne({ email })
+    // if user not found - return error
+    if (!user) {
+      return res.status(404).json({ error: 'Incorrect credentials' })
+    }
+    // if user found
+    // compare passwords
+    const isMatch = await bcrypt.compare(password, user.password)
+    // if pw no match - return error
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Incorrect credentials' })
+    }
+    // if pw match - return user
+    return res.status(200).json(user)
+  } catch (error) {
+    console.error(error)
+    return res.status(300).json(error)
   }
 })
 
