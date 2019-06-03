@@ -1,6 +1,7 @@
 // imports
 const express = require('express')
 const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
 
 // server settings
 const app = express()
@@ -11,6 +12,8 @@ const { MONGO_URI } = require('./config/keys_dev')
 const usersRoutes = require('./routes/users')
 
 // middlewares
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 app.use('/api/users', usersRoutes)
 
 // test route
