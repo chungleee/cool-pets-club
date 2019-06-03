@@ -2,11 +2,6 @@ const router = require('express').Router()
 const User = require('../models/User')
 const { omitPassword } = require('../utils/utilities')
 
-// const omitPassword = function(object, field) {
-//   delete object[field]
-//   return object
-// }
-
 // @route POST /api/users/create
 // @desc  Create new user
 // @acc   Public
