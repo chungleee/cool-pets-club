@@ -42,4 +42,24 @@ router.get('/:postId', async (req, res) => {
     return res.status(400).json(error)
   }
 })
+
+// @route GET /api/posts/
+// @desc  Fetch all posts
+// @acc   Public - will require auth
+router.get('/', async (req, res) => {
+  try {
+    // find posts
+    const posts = await Post.find()
+    // if no post - return error
+    if (!posts) {
+      return res.status(404).json({ error: 'Something went wrong' })
+    }
+    // return posts array
+    return res.status(200).json(posts)
+  } catch (error) {
+    console.error(error)
+    return res.status(400).json(error)
+  }
+})
+
 module.exports = router
