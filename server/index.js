@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 
 // connections
 mongoose
-  .connect(MONGO_URI, { useNewUrlParser: true })
+  .connect(MONGO_URI, { useNewUrlParser: true, useFindAndModify: false })
   .then(() => {
     console.log('>>> connected to mongoDB')
   })
