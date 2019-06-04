@@ -10,11 +10,13 @@ const { MONGO_URI } = require('./config/keys_dev')
 
 // api routes
 const usersRoutes = require('./routes/users')
+const postsRoutes = require('./routes/posts')
 
 // middlewares
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use('/api/users', usersRoutes)
+app.use('/api/posts', postsRoutes)
 
 // test route
 app.get('/', (req, res) => {
