@@ -62,4 +62,35 @@ router.get('/', async (req, res) => {
   }
 })
 
+// @route PUT /api/posts/:postId
+// @desc  Edit post by id
+// @acc   Public - will require auth
+router.put('/:postId', async (req, res) => {
+  // get post id
+  const postId = req.params.postId
+  try {
+    // init updates object
+    const updates = {}
+    // loop req.body
+    for (const keys in req.body) {
+      // if field not empty - push into updates obj
+      if (req.body[keys].length > 0) {
+        updates[keys] = req.body[keys]
+      }
+    }
+
+    // find post by id
+    const post = await Post.findByIdAndUpdate(postId, updates)
+    // if !post - return error
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found' })
+    }
+
+    return res.status(200).json({ edited: true, post })
+  } catch (error) {
+    console.error(error)
+    return res.status(400).json(error)
+  }
+})
+
 module.exports = router
