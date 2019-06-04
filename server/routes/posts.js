@@ -93,4 +93,24 @@ router.put('/:postId', async (req, res) => {
   }
 })
 
+// @route DELETE /api/posts/:postId
+// @desc  Delete post by id
+// @acc   Public - will require auth
+router.delete('/:postId', async (req, res) => {
+  // get post id from params
+  const postId = req.params.postId
+  try {
+    // find post by id
+    const post = await Post.findByIdAndDelete(postId)
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found' })
+    }
+
+    return res.status(200).json({ deleted: true, post })
+  } catch (error) {
+    console.error(error)
+    return res.status(400).json(error)
+  }
+})
+
 module.exports = router
