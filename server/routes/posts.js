@@ -1,19 +1,25 @@
 const router = require('express').Router()
 const Post = require('../models/Post')
+const User = require('../models/User')
 
 // @route POST /api/posts/create
 // @desc  Create a new post
 // @acc   Public - will require auth
 router.post('/create', async (req, res) => {
-  const { caption, url } = req.body
+  const { caption, url, userId } = req.body
   try {
     // create new post
     let newPost = await new Post({
       caption,
-      url
+      url,
+      uploader: userId
     })
     // save
     newPost = await newPost.save()
+
+    let user = await User.findById(userId)
+    user.posts.push(newPost._id)
+    await user.save()
 
     return res.status(200).json(newPost)
   } catch (error) {
