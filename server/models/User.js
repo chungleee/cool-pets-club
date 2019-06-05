@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const { Schema, SchemaTypes, model } = mongoose
 
 const userSchema = new Schema(
   {
@@ -10,11 +10,12 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true
-    }
+    },
+    posts: [{ type: SchemaTypes.ObjectId, ref: 'Post' }]
   },
   {
     timestamps: true
   }
 )
 
-module.exports = User = mongoose.model('User', userSchema)
+module.exports = User = model('User', userSchema)
