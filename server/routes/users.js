@@ -83,4 +83,22 @@ router.delete('/:userId', async (req, res) => {
   }
 })
 
+// @route GET /api/users/:userId
+// @desc  Fetch user by id
+// @acc   Public (will be private)
+router.get('/:userId', async (req, res) => {
+  const userId = req.params.userId
+  try {
+    const user = await User.findById(userId).populate('posts')
+    // if user not found - return error
+    if (!user) {
+      res.status(404).json({ error: 'User not found' })
+    }
+    return res.status(200).json(user)
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json(error)
+  }
+})
+
 module.exports = router
