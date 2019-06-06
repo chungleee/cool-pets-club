@@ -1,7 +1,10 @@
 const router = require('express').Router()
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+const { auth } = require('../middleware/auth')
 const { omitPassword } = require('../utils/utilities')
+const { JWT_SECRET } = require('../config/keys_dev')
 
 // @route POST /api/users/register
 // @desc  Create new user
@@ -44,7 +47,7 @@ router.get('/login', async (req, res) => {
   const { email, password } = req.body
   try {
     // find user by email
-    const user = await User.findOne({ email })
+    let user = await User.findOne({ email })
     // if user not found - return error
     if (!user) {
       return res.status(404).json({ error: 'Incorrect credentials' })
@@ -56,8 +59,17 @@ router.get('/login', async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ error: 'Incorrect credentials' })
     }
+
+    // if pw match - sign token
+    const payload = {
+      id: user._id
+    }
+
+    const token = await jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' })
+
     // if pw match - return user
-    return res.status(200).json(user)
+    user = omitPassword(user.toObject(), 'password')
+    return res.status(200).json({ user, token })
   } catch (error) {
     console.error(error)
     return res.status(400).json(error)
@@ -86,14 +98,15 @@ router.delete('/:userId', async (req, res) => {
 // @route GET /api/users/:userId
 // @desc  Fetch user by id
 // @acc   Public (will be private)
-router.get('/:userId', async (req, res) => {
+router.get('/:userId', auth, async (req, res) => {
   const userId = req.params.userId
   try {
-    const user = await User.findById(userId).populate('posts')
+    let user = await User.findById(userId).populate('posts')
     // if user not found - return error
     if (!user) {
       res.status(404).json({ error: 'User not found' })
     }
+    user = omitPassword(user.toObject(), 'password')
     return res.status(200).json(user)
   } catch (error) {
     console.log(error)
