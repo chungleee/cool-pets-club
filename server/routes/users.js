@@ -6,34 +6,13 @@ const { auth } = require('../middleware/auth')
 const { omitPassword } = require('../utils/utilities')
 const { JWT_SECRET } = require('../config/keys_dev')
 
-// @route POST /api/users/register
-// @desc  Create new user
-// @acc   Public
-router.post('/register', async (req, res) => {
-  const { email, password } = req.body
+// @route GET /api/users/current
+// @desc  Fetch current logged in user
+// @acc   Private
+router.get('/current', auth, async (req, res) => {
+  const { user } = req
   try {
-    // find if email exists
-    const user = await User.findOne({ email })
-
-    // if email exists - return error
-    if (user) {
-      return res.status(400).json({ error: 'Email is already in use' })
-    }
-    // salt & hash password
-    const salt = await bcrypt.genSalt(12)
-    const hash = await bcrypt.hash(password, salt)
-
-    // if don't exists - create new user
-    let newUser = await new User({
-      email,
-      password: hash
-    })
-    // save and return document
-    newUser = await newUser.save()
-    // remove password
-    newUser = omitPassword(newUser.toObject(), 'password')
-
-    return res.status(200).json(newUser)
+    return res.status(200).json(user)
   } catch (error) {
     console.error(error)
     return res.status(400).json(error)
@@ -76,6 +55,60 @@ router.get('/login', async (req, res) => {
   }
 })
 
+// @route GET /api/users/:userId
+// @desc  Fetch user by id
+// @acc   Public (will be private)
+router.get('/:userId', auth, async (req, res) => {
+  const userId = req.params.userId
+  try {
+    console.log(req.user)
+    let user = await User.findById(userId).populate('posts')
+    // if user not found - return error
+    if (!user) {
+      res.status(404).json({ error: 'User not found' })
+    }
+    user = omitPassword(user.toObject(), 'password')
+    return res.status(200).json(user)
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json(error)
+  }
+})
+
+// @route POST /api/users/register
+// @desc  Create new user
+// @acc   Public
+router.post('/register', async (req, res) => {
+  const { email, password } = req.body
+  try {
+    // find if email exists
+    const user = await User.findOne({ email })
+
+    // if email exists - return error
+    if (user) {
+      return res.status(400).json({ error: 'Email is already in use' })
+    }
+    // salt & hash password
+    const salt = await bcrypt.genSalt(12)
+    const hash = await bcrypt.hash(password, salt)
+
+    // if don't exists - create new user
+    let newUser = await new User({
+      email,
+      password: hash
+    })
+    // save and return document
+    newUser = await newUser.save()
+    // remove password
+    newUser = omitPassword(newUser.toObject(), 'password')
+
+    return res.status(200).json(newUser)
+  } catch (error) {
+    console.error(error)
+    return res.status(400).json(error)
+  }
+})
+
 // @route DELETE /api/users/:userId
 // @desc  Delete user by id
 // @acc   Public (will be private)
@@ -91,25 +124,6 @@ router.delete('/:userId', async (req, res) => {
     return res.status(200).json({ deleted: true, user })
   } catch (error) {
     console.error(error)
-    return res.status(400).json(error)
-  }
-})
-
-// @route GET /api/users/:userId
-// @desc  Fetch user by id
-// @acc   Public (will be private)
-router.get('/:userId', auth, async (req, res) => {
-  const userId = req.params.userId
-  try {
-    let user = await User.findById(userId).populate('posts')
-    // if user not found - return error
-    if (!user) {
-      res.status(404).json({ error: 'User not found' })
-    }
-    user = omitPassword(user.toObject(), 'password')
-    return res.status(200).json(user)
-  } catch (error) {
-    console.log(error)
     return res.status(400).json(error)
   }
 })
