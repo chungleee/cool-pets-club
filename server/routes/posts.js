@@ -1,12 +1,14 @@
 const router = require('express').Router()
+const { auth } = require('../middleware/auth')
 const Post = require('../models/Post')
 const User = require('../models/User')
 
 // @route POST /api/posts/create
 // @desc  Create a new post
 // @acc   Public - will require auth
-router.post('/create', async (req, res) => {
-  const { caption, url, userId } = req.body
+router.post('/create', auth, async (req, res) => {
+  const { caption, url } = req.body
+  const userId = req.user._id
   try {
     // create new post
     let newPost = await new Post({
@@ -31,7 +33,7 @@ router.post('/create', async (req, res) => {
 // @route GET /api/posts/:postI
 // @desc  Fetch post by id
 // @acc   Public - will require auth
-router.get('/:postId', async (req, res) => {
+router.get('/:postId', auth, async (req, res) => {
   // get post id from params
   const postId = req.params.postId
   try {
@@ -52,7 +54,7 @@ router.get('/:postId', async (req, res) => {
 // @route GET /api/posts/
 // @desc  Fetch all posts
 // @acc   Public - will require auth
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
     // find posts
     const posts = await Post.find()
@@ -71,7 +73,7 @@ router.get('/', async (req, res) => {
 // @route PUT /api/posts/:postId
 // @desc  Edit post by id
 // @acc   Public - will require auth
-router.put('/:postId', async (req, res) => {
+router.put('/:postId', auth, async (req, res) => {
   // get post id
   const postId = req.params.postId
   try {
@@ -102,7 +104,7 @@ router.put('/:postId', async (req, res) => {
 // @route DELETE /api/posts/:postId
 // @desc  Delete post by id
 // @acc   Public - will require auth
-router.delete('/:postId', async (req, res) => {
+router.delete('/:postId', auth, async (req, res) => {
   // get post id from params
   const postId = req.params.postId
   try {
