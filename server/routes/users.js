@@ -112,15 +112,17 @@ router.post('/register', async (req, res) => {
 // @route DELETE /api/users/:userId
 // @desc  Delete user by id
 // @acc   Public (will be private)
-router.delete('/:userId', async (req, res) => {
-  const id = req.params.userId
+router.delete('/delete', auth, async (req, res) => {
+  // get user id from req.user
+  const id = req.user._id
   try {
+    // find user by id
     const user = await User.findByIdAndDelete(id)
-    // if not found
+    // if no user - return error
     if (!user) {
       return res.status(404).json({ error: 'User not found' })
     }
-    // if found - return with success
+    // else - delete
     return res.status(200).json({ deleted: true, user })
   } catch (error) {
     console.error(error)
