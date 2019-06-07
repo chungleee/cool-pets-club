@@ -5,7 +5,7 @@ const User = require('../models/User')
 
 // @route POST /api/posts/create
 // @desc  Create a new post
-// @acc   Public - will require auth
+// @acc   Private
 router.post('/create', auth, async (req, res) => {
   const { caption, url } = req.body
   const userId = req.user._id
@@ -72,7 +72,7 @@ router.get('/', auth, async (req, res) => {
 
 // @route PUT /api/posts/:postId
 // @desc  Edit post by id
-// @acc   Public - will require auth
+// @acc   Private
 router.put('/:postId', auth, async (req, res) => {
   // get post id
   const postId = req.params.postId
@@ -88,7 +88,10 @@ router.put('/:postId', auth, async (req, res) => {
     }
 
     // find post by id
-    const post = await Post.findByIdAndUpdate(postId, updates)
+    // check if post uploader id matches with user id in req
+    const post = await Post.findByIdAndUpdate(postId, updates).where({
+      uploader: req.user._id
+    })
     // if !post - return error
     if (!post) {
       return res.status(404).json({ error: 'Post not found' })
