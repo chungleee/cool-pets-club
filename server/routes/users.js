@@ -61,7 +61,6 @@ router.get('/login', async (req, res) => {
 router.get('/:userId', auth, async (req, res) => {
   const userId = req.params.userId
   try {
-    console.log(req.user)
     let user = await User.findById(userId).populate('posts')
     // if user not found - return error
     if (!user) {
