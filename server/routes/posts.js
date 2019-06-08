@@ -23,6 +23,7 @@ router.post('/create', auth, async (req, res) => {
     user.posts.push(newPost._id)
     await user.save()
 
+    // return res.status(200).json(newPost)
     return res.status(200).json(newPost)
   } catch (error) {
     console.error(error)
@@ -112,10 +113,25 @@ router.delete('/:postId', auth, async (req, res) => {
   const postId = req.params.postId
   try {
     // find post by id
-    const post = await Post.findByIdAndDelete(postId)
+    // check if post uploader id matches with user id in req
+    const post = await Post.findByIdAndDelete(postId).where({
+      uploader: req.user._id
+    })
+
+    // if !post - return error
     if (!post) {
       return res.status(404).json({ error: 'Post not found' })
     }
+
+    // remove it from User.posts array
+    // get user
+    const user = await User.findById(req.user._id)
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+    // remove post from array
+    await user.posts.pull(postId)
+    await user.save()
 
     return res.status(200).json({ deleted: true, post })
   } catch (error) {
