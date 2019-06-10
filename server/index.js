@@ -2,6 +2,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const helmet = require('helmet')
 
 // server settings
 const app = express()
@@ -13,6 +14,7 @@ const usersRoutes = require('./routes/users')
 const postsRoutes = require('./routes/posts')
 
 // middlewares
+app.use(helmet())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use('/api/users', usersRoutes)
