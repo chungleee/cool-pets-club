@@ -18,7 +18,7 @@ const style = {
     marginLeft: 'auto',
     marginRight: 'auto'
   },
-  button: { margin: '1rem auto', width: '50%' }
+  button: { margin: '1.25rem auto', width: '50%' }
 }
 
 const Login = () => {
@@ -38,7 +38,7 @@ const Login = () => {
           name="password"
           margin="normal"
         />
-        <Button size="small" variant="outlined" style={style.form}>
+        <Button size="small" variant="outlined" style={style.button}>
           Log In
         </Button>
       </form>
