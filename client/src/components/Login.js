@@ -14,7 +14,7 @@ const style = {
     flexDirection: 'column',
     alignContent: 'center',
     width: '70%',
-    marginTop: '5rem',
+    marginTop: '3rem',
     marginLeft: 'auto',
     marginRight: 'auto'
   },
