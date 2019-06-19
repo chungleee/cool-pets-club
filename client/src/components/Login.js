@@ -1,12 +1,13 @@
 import React from 'react'
-import { TextField, Button, Typography } from '@material-ui/core'
+import { Link as RouterLink } from 'react-router-dom'
+import { TextField, Button, Typography, Link } from '@material-ui/core'
 
 const style = {
   container_div: {
     height: '100vh',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'space-evenly'
   },
   typo_container: { textAlign: 'center' },
   form: {
@@ -14,7 +15,6 @@ const style = {
     flexDirection: 'column',
     alignContent: 'center',
     width: '70%',
-    marginTop: '3rem',
     marginLeft: 'auto',
     marginRight: 'auto'
   },
@@ -42,6 +42,12 @@ const Login = () => {
           Log In
         </Button>
       </form>
+      <Typography style={{ textAlign: 'center' }} variant="body1">
+        {`Don't have an account? `}
+        <Link color="inherit" component={RouterLink} to="/register">
+          Register
+        </Link>
+      </Typography>
     </div>
   )
 }
