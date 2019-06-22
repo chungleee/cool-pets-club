@@ -7,7 +7,7 @@ import Feed from './components/Feed'
 
 const App = () => {
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       <CssBaseline>
         <Router>
           <Route exact path="/" component={Login} />
