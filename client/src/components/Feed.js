@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { Link } from 'react-router-dom'
 import {
   AppBar,
   Toolbar,
@@ -21,12 +22,16 @@ const Feed = () => {
         <Toolbar style={style.Toolbar}>
           <Typography variant="body1">Cool Pets Group</Typography>
           <div>
-            <IconButton>
-              <Icon className="fas fa-camera-retro" />
-            </IconButton>
-            <IconButton>
-              <Icon className="fas fa-user-circle" />
-            </IconButton>
+            <Link to="/camera">
+              <IconButton>
+                <Icon className="fas fa-camera-retro" />
+              </IconButton>
+            </Link>
+            <Link to="/profile">
+              <IconButton>
+                <Icon className="fas fa-user-circle" />
+              </IconButton>
+            </Link>
           </div>
         </Toolbar>
       </AppBar>
