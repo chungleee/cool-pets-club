@@ -1,28 +1,27 @@
 import React from 'react'
-import { Container, Grid, Typography, Avatar } from '@material-ui/core'
+import { Box, Container, Grid, Typography, Avatar } from '@material-ui/core'
+import Layout from './Layout'
 
 const Profile = () => {
+  const style = {
+    avatar: { width: '50px', height: '50px', margin: 'auto' }
+  }
   return (
-    <Container>
-      <Grid
-        style={{ padding: '2rem' }}
-        container
-        direction="column"
-        alignContent="center"
-      >
-        <Avatar style={{ width: '50px', height: '50px', margin: 'auto' }}>
-          J
-        </Avatar>
-        <div>
-          <Typography align="center" variant="h6">
-            John Doe
-          </Typography>
-          <Typography align="center" variant="body1">
-            Please check out my good boys!
-          </Typography>
-        </div>
-      </Grid>
-    </Container>
+    <Layout>
+      <Box borderBottom={1}>
+        <Grid container direction="column" alignContent="center">
+          <Avatar style={style.avatar}>J</Avatar>
+          <div>
+            <Typography align="center" variant="h6">
+              John Doe
+            </Typography>
+            <Typography align="center" variant="body1">
+              Please check out my good boys!
+            </Typography>
+          </div>
+        </Grid>
+      </Box>
+    </Layout>
   )
 }
 

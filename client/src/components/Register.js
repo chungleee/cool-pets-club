@@ -50,7 +50,7 @@ const Register = () => {
       </form>
       <Typography style={{ textAlign: 'center' }} variant="body1">
         {`Already have an account? `}
-        <Link color="inherit" component={RouterLink} to="/">
+        <Link color="inherit" component={RouterLink} to="/login">
           Login
         </Link>
       </Typography>
